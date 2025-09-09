@@ -122,31 +122,119 @@ export default async function handler(req, res) {
       }
     }
     
-    // Send email notification via SendGrid
-    if (process.env.SENDGRID_API_KEY && process.env.NOTIFICATION_EMAIL) {
+    // Send emails via SendGrid
+    if (process.env.SENDGRID_API_KEY) {
       sgMail.setApiKey(process.env.SENDGRID_API_KEY);
       
-      const msg = {
-        to: process.env.NOTIFICATION_EMAIL,
-        from: process.env.SENDGRID_FROM_EMAIL || 'noreply@simplemtd.co.uk', // Must be verified in SendGrid
-        subject: '🎉 New SimpleMTD Lead!',
-        text: `New lead signed up!\n\nEmail: ${email}\nTime: ${new Date().toLocaleString('en-GB')}\nSource: landing_page`,
+      // 1. Send welcome email with checklist to the user
+      const welcomeMsg = {
+        to: email,
+        from: process.env.SENDGRID_FROM_EMAIL || 'noreply@simplemtd.co.uk',
+        subject: '📋 Your MTD Readiness Checklist is here!',
+        text: `Thank you for signing up!\n\nYour MTD Readiness Checklist:\n\n✅ Register for MTD by April 2026\n✅ Choose HMRC-approved software\n✅ Keep digital records\n✅ Submit VAT returns quarterly\n✅ Maintain digital links between systems\n\nNext steps:\n1. Check if you're required to use MTD (turnover over £85,000)\n2. Review your current bookkeeping system\n3. Start keeping digital records now\n\nQuestions? Reply to this email.\n\nBest regards,\nThe SimpleMTD Team`,
         html: `
-          <h2>New lead signed up!</h2>
-          <p><strong>Email:</strong> ${email}</p>
-          <p><strong>Time:</strong> ${new Date().toLocaleString('en-GB')}</p>
-          <p><strong>Source:</strong> landing_page</p>
-          <hr>
-          <p><a href="https://supabase.com/dashboard">View in Supabase</a></p>
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+            <h2 style="color: #1e40af;">Thank you for signing up!</h2>
+            <p>Here's your MTD Readiness Checklist to help you prepare for Making Tax Digital:</p>
+            
+            <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3 style="color: #1e40af; margin-top: 0;">📋 Your MTD Readiness Checklist</h3>
+              
+              <h4>1. Check if you're affected</h4>
+              <ul>
+                <li>✅ VAT-registered with turnover above £85,000</li>
+                <li>✅ Deadline: April 2026 for all VAT-registered businesses</li>
+                <li>✅ Income Tax Self Assessment coming in April 2026</li>
+              </ul>
+              
+              <h4>2. Prepare your records</h4>
+              <ul>
+                <li>✅ Start keeping digital records now</li>
+                <li>✅ Save all invoices and receipts digitally</li>
+                <li>✅ Use spreadsheets or accounting software</li>
+                <li>✅ Maintain digital links between systems</li>
+              </ul>
+              
+              <h4>3. Choose your software</h4>
+              <ul>
+                <li>✅ Must be HMRC-approved MTD software</li>
+                <li>✅ Consider your business needs and budget</li>
+                <li>✅ SimpleMTD starts at just £19/month</li>
+              </ul>
+              
+              <h4>4. Test before the deadline</h4>
+              <ul>
+                <li>✅ Start using MTD software early</li>
+                <li>✅ Submit a test return</li>
+                <li>✅ Iron out any issues before April 2026</li>
+              </ul>
+            </div>
+            
+            <div style="background-color: #fef3c7; padding: 15px; border-radius: 8px; margin: 20px 0;">
+              <strong>⚠️ Important:</strong> HMRC can charge penalties of £400+ for non-compliance. 
+              Don't wait until the last minute!
+            </div>
+            
+            <h3>What's next?</h3>
+            <ol>
+              <li>Review this checklist with your accountant</li>
+              <li>Start digitising your records today</li>
+              <li>Watch for our upcoming SimpleMTD launch</li>
+            </ol>
+            
+            <p style="margin-top: 30px;">
+              <strong>Need help?</strong> Just reply to this email and we'll guide you through the process.
+            </p>
+            
+            <hr style="margin: 30px 0; border: none; border-top: 1px solid #e5e7eb;">
+            
+            <p style="color: #6b7280; font-size: 14px;">
+              You're receiving this because you requested the MTD Readiness Checklist.<br>
+              SimpleMTD Ltd | HMRC Recognised Software<br>
+              <a href="https://simplemtd-landing.vercel.app/privacy" style="color: #3b82f6;">Privacy Policy</a>
+            </p>
+          </div>
         `,
       };
       
       try {
-        await sgMail.send(msg);
-        console.log('Notification email sent to:', process.env.NOTIFICATION_EMAIL);
+        await sgMail.send(welcomeMsg);
+        console.log('Welcome email sent to:', email);
+        
+        // Update Supabase to mark checklist as sent
+        await supabase
+          .from('leads')
+          .update({ checklist_sent: true })
+          .eq('email', email);
+          
       } catch (emailError) {
-        console.error('SendGrid error:', emailError.message);
-        // Don't fail the request if email fails
+        console.error('Welcome email error:', emailError.message);
+      }
+      
+      // 2. Send notification to admin
+      if (process.env.NOTIFICATION_EMAIL) {
+        const notificationMsg = {
+          to: process.env.NOTIFICATION_EMAIL,
+          from: process.env.SENDGRID_FROM_EMAIL || 'noreply@simplemtd.co.uk',
+          subject: '🎉 New SimpleMTD Lead!',
+          text: `New lead signed up!\n\nEmail: ${email}\nTime: ${new Date().toLocaleString('en-GB')}\nSource: landing_page\nChecklist sent: Yes`,
+          html: `
+            <h2>New lead signed up!</h2>
+            <p><strong>Email:</strong> ${email}</p>
+            <p><strong>Time:</strong> ${new Date().toLocaleString('en-GB')}</p>
+            <p><strong>Source:</strong> landing_page</p>
+            <p><strong>Checklist sent:</strong> ✅ Yes</p>
+            <hr>
+            <p><a href="https://supabase.com/dashboard">View in Supabase</a></p>
+          `,
+        };
+        
+        try {
+          await sgMail.send(notificationMsg);
+          console.log('Notification email sent to:', process.env.NOTIFICATION_EMAIL);
+        } catch (emailError) {
+          console.error('Notification error:', emailError.message);
+        }
       }
     }
     
