@@ -1,0 +1,16 @@
+{
+  "name": "simplemtd-landing",
+  "version": "1.0.0",
+  "description": "Landing page for SimpleMTD - Making Tax Digital Software",
+  "main": "index.html",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0"
+  },
+  "devDependencies": {
+    "vercel": "^32.0.0"
+  }
+}
