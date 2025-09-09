@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleMTD - Making Tax Digital Software for UK Sole Traders</title>
+    <meta name="description" content="HMRC-compliant MTD software starting at £19/month. Built for sole traders and landlords. No accounting knowledge required.">
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-XXXXXXXXXX'); // Replace with your GA ID
+    </script>
+    
+    <!-- Facebook Pixel -->
+    <script>
+        !function(f,b,e,v,n,t,s)
+        {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+        if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+        n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];
+        s.parentNode.insertBefore(t,s)}(window, document,'script',
+        'https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', 'YOUR_PIXEL_ID'); // Replace with your Pixel ID
+        fbq('track', 'PageView');
+    </script>
+</head>
+<body class="bg-gray-50">
+    <!-- Hero Section -->
+    <section class="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-20">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <!-- Headline -->
+            <h1 class="text-4xl md:text-5xl font-bold text-center mb-2">
+                HMRC Deadline: April 2026
+            </h1>
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-6">
+                780,000 UK Businesses Must Switch to Digital Tax
+            </h2>
+            
+            <!-- Subheadline -->
+            <p class="text-xl md:text-2xl text-center mb-8 text-blue-100">
+                SimpleMTD makes compliance effortless for sole traders and landlords - no accounting degree required
+            </p>
+            
+            <!-- Value Props -->
+            <div class="grid md:grid-cols-3 gap-4 mb-10">
+                <div class="text-center">
+                    <div class="text-3xl mb-2">✅</div>
+                    <p class="font-semibold">Submit tax in 15 minutes</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl mb-2">✅</div>
+                    <p class="font-semibold">100% HMRC compliant</p>
+                </div>
+                <div class="text-center">
+                    <div class="text-3xl mb-2">✅</div>
+                    <p class="font-semibold">Never miss deadlines</p>
+                </div>
+            </div>
+            
+            <!-- Email Form -->
+            <div class="bg-white rounded-lg p-6 shadow-xl">
+                <form id="email-form" class="space-y-4" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                    <input 
+                        type="email" 
+                        name="email"
+                        placeholder="Enter your email for free checklist"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 text-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    >
+                    <button 
+                        type="submit"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-200"
+                    >
+                        Get Your Free MTD Readiness Checklist
+                    </button>
+                </form>
+                <p class="text-center text-gray-500 text-sm mt-4">
+                    Join 500+ businesses preparing for MTD<br>
+                    No spam. Unsubscribe anytime.
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Problem/Solution Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Without SimpleMTD -->
+                <div class="bg-red-50 rounded-lg p-6">
+                    <h3 class="text-xl font-bold text-red-900 mb-4">Without SimpleMTD:</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2">❌</span>
+                            Confusing spreadsheets and manual calculations
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2">❌</span>
+                            Expensive accountant fees (£150-300/month)
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2">❌</span>
+                            Risk of errors and HMRC penalties (£100-£3,000)
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-red-500 mr-2">❌</span>
+                            Hours wasted on tax admin every quarter
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- With SimpleMTD -->
+                <div class="bg-green-50 rounded-lg p-6">
+                    <h3 class="text-xl font-bold text-green-900 mb-4">With SimpleMTD:</h3>
+                    <ul class="space-y-3 text-gray-700">
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✅</span>
+                            Automated calculations - zero errors
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✅</span>
+                            Direct HMRC submission - one click
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✅</span>
+                            £19/month - 90% cheaper than accountants
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-green-500 mr-2">✅</span>
+                            15 minutes per quarter - that's it
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Risk Reversal Section -->
+    <section class="bg-blue-50 py-16">
+        <div class="container mx-auto px-4 max-w-4xl text-center">
+            <h2 class="text-3xl font-bold mb-6">Our Zero-Risk Guarantee</h2>
+            <div class="space-y-2 text-lg">
+                <p>🔒 <strong>30-day money back guarantee</strong></p>
+                <p>🔒 <strong>No setup fees</strong></p>
+                <p>🔒 <strong>Cancel anytime</strong></p>
+                <p>🔒 <strong>Free migration from spreadsheets</strong></p>
+            </div>
+            <p class="mt-6 text-xl italic text-gray-700">
+                "If SimpleMTD doesn't save you at least 2 hours on your next tax return,<br>
+                we'll refund every penny"
+            </p>
+        </div>
+    </section>
+    
+    <!-- FAQ Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4 max-w-4xl">
+            <h2 class="text-3xl font-bold text-center mb-10">Common Questions</h2>
+            <div class="space-y-6">
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-2">"I'm not tech-savvy"</h3>
+                    <p class="text-gray-700">SimpleMTD is designed for non-accountants. If you can use email, you can use SimpleMTD.</p>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-2">"My accountant handles everything"</h3>
+                    <p class="text-gray-700">Great! SimpleMTD works with accountants too. Save them time (and your money).</p>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-2">"Is it really HMRC approved?"</h3>
+                    <p class="text-gray-700">Yes. We're on HMRC's official MTD software list. 100% compliant.</p>
+                </div>
+                <div class="bg-white rounded-lg p-6 shadow">
+                    <h3 class="font-bold text-lg mb-2">"What if I need help?"</h3>
+                    <p class="text-gray-700">UK-based support via chat, email, or phone. Real humans, not bots.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Urgency Section -->
+    <section class="bg-yellow-50 py-16">
+        <div class="container mx-auto px-4 max-w-4xl text-center">
+            <h2 class="text-3xl font-bold mb-6">⏰ Early Bird Offer Ending Soon</h2>
+            <div class="bg-white rounded-lg p-6 shadow-xl inline-block">
+                <p class="text-xl font-semibold mb-4">First 100 customers get:</p>
+                <ul class="text-left space-y-2 mb-4">
+                    <li>✓ Lifetime price lock at £19/month (rises to £29 after launch)</li>
+                    <li>✓ Free 1-on-1 onboarding call (worth £99)</li>
+                    <li>✓ Priority support status forever</li>
+                </ul>
+                <p class="text-2xl font-bold text-red-600">[73 of 100 spots taken]</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Final CTA -->
+    <section class="bg-gradient-to-br from-blue-900 to-blue-700 text-white py-20">
+        <div class="container mx-auto px-4 max-w-4xl text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4">Ready to Make Tax Simple?</h2>
+            <p class="text-xl mb-8">Enter your email to get your FREE MTD Readiness Checklist and secure your early bird spot.</p>
+            
+            <div class="bg-white rounded-lg p-6 shadow-xl max-w-md mx-auto">
+                <form id="email-form-bottom" class="space-y-4" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                    <input 
+                        type="email" 
+                        name="email"
+                        placeholder="Enter your email"
+                        required
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 text-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                    >
+                    <button 
+                        type="submit"
+                        class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-200"
+                    >
+                        Get My Free Checklist →
+                    </button>
+                </form>
+                <p class="text-gray-500 text-sm mt-4">
+                    No spam. Unsubscribe anytime. Your checklist arrives in 60 seconds.
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-400 py-8">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2025 SimpleMTD Ltd. All rights reserved.</p>
+            <p class="mt-2">Company #12345678 | HMRC Recognised | 🔒 SSL Secured | 🇬🇧 UK Company</p>
+            <p class="mt-2">
+                <a href="mailto:hello@simplemtd.co.uk" class="hover:text-white">hello@simplemtd.co.uk</a>
+            </p>
+        </div>
+    </footer>
+    
+    <!-- Simple form handling script -->
+    <script>
+        // Track form submissions
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                // Track with GA
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'generate_lead', {
+                        'event_category': 'engagement'
+                    });
+                }
+                // Track with FB Pixel
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'Lead');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
