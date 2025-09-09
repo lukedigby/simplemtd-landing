@@ -191,7 +191,7 @@ export default async function handler(req, res) {
             <p style="color: #6b7280; font-size: 14px;">
               You're receiving this because you requested the MTD Readiness Checklist.<br>
               SimpleMTD Ltd | HMRC Recognised Software<br>
-              <a href="https://simplemtd-landing.vercel.app/privacy" style="color: #3b82f6;">Privacy Policy</a>
+              <a href="https://simplemtd-landing.vercel.app/privacy.html" style="color: #3b82f6;">Privacy Policy</a>
             </p>
           </div>
         `,
