@@ -124,6 +124,13 @@ export default async function handler(req, res) {
     
     // Send email notification via SendGrid
     if (process.env.SENDGRID_API_KEY && process.env.NOTIFICATION_EMAIL) {
+      console.log('SendGrid config found:', {
+        hasApiKey: !!process.env.SENDGRID_API_KEY,
+        apiKeyLength: process.env.SENDGRID_API_KEY?.length,
+        notificationEmail: process.env.NOTIFICATION_EMAIL,
+        fromEmail: process.env.SENDGRID_FROM_EMAIL || 'noreply@simplemtd.co.uk'
+      });
+      
       sgMail.setApiKey(process.env.SENDGRID_API_KEY);
       
       const msg = {
@@ -142,12 +149,24 @@ export default async function handler(req, res) {
       };
       
       try {
-        await sgMail.send(msg);
-        console.log('Notification email sent');
+        const result = await sgMail.send(msg);
+        console.log('Notification email sent successfully:', {
+          statusCode: result[0]?.statusCode,
+          messageId: result[0]?.headers?.['x-message-id']
+        });
       } catch (emailError) {
-        console.error('SendGrid error:', emailError);
+        console.error('SendGrid error details:', {
+          message: emailError.message,
+          code: emailError.code,
+          response: emailError.response?.body
+        });
         // Don't fail the request if email fails
       }
+    } else {
+      console.log('SendGrid not configured:', {
+        hasApiKey: !!process.env.SENDGRID_API_KEY,
+        hasNotificationEmail: !!process.env.NOTIFICATION_EMAIL
+      });
     }
     
     res.status(200).json({ 
