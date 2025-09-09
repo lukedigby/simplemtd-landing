@@ -244,20 +244,63 @@
         </div>
     </footer>
     
-    <!-- Simple form handling script -->
+    <!-- Enhanced form handling with direct database storage -->
     <script>
-        // Track form submissions
         document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                // Track with GA
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'generate_lead', {
-                        'event_category': 'engagement'
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.textContent;
+                const email = this.querySelector('input[name="email"]').value;
+                
+                try {
+                    // Update button state
+                    submitBtn.disabled = true;
+                    submitBtn.textContent = 'Submitting...';
+                    
+                    // Send to your API (stores in Supabase)
+                    fetch('/api/collect-lead', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email })
+                    }).catch(err => console.log('API error:', err));
+                    
+                    // Also submit to Formspree for email notification
+                    const formData = new FormData(this);
+                    await fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: { 'Accept': 'application/json' }
                     });
-                }
-                // Track with FB Pixel
-                if (typeof fbq !== 'undefined') {
-                    fbq('track', 'Lead');
+                    
+                    // Track conversions
+                    if (typeof gtag !== 'undefined') {
+                        gtag('event', 'generate_lead', { 'event_category': 'engagement' });
+                    }
+                    if (typeof fbq !== 'undefined') {
+                        fbq('track', 'Lead');
+                    }
+                    
+                    // Success state
+                    submitBtn.textContent = '✓ Check your email!';
+                    submitBtn.classList.add('bg-green-600');
+                    this.reset();
+                    
+                    // Reset after 3 seconds
+                    setTimeout(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = originalText;
+                        submitBtn.classList.remove('bg-green-600');
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('Submission error:', error);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = 'Error - please try again';
+                    setTimeout(() => {
+                        submitBtn.textContent = originalText;
+                    }, 3000);
                 }
             });
         });
