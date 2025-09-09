@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Email Notification - SimpleMTD</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-md mx-auto bg-white rounded-lg shadow-md p-6">
+        <h1 class="text-2xl font-bold mb-4">Test Email Notification</h1>
+        
+        <!-- Test Real Submission -->
+        <div class="mb-8">
+            <h2 class="text-lg font-semibold mb-2">Test Full Flow (DB + Email)</h2>
+            <form id="test-form" class="space-y-4">
+                <input 
+                    type="email" 
+                    name="email"
+                    placeholder="test@example.com"
+                    value="test@example.com"
+                    required
+                    class="w-full px-3 py-2 border border-gray-300 rounded"
+                >
+                <!-- Honeypot field -->
+                <input type="text" name="_gotcha" style="display:none">
+                <button 
+                    type="submit"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                    Test Submit (Should trigger email)
+                </button>
+            </form>
+            <div id="result" class="mt-4 text-sm"></div>
+        </div>
+
+        <!-- What to check -->
+        <div class="mt-8 p-4 bg-gray-100 rounded">
+            <h3 class="font-semibold">After clicking test:</h3>
+            <ol class="list-decimal list-inside text-sm mt-2">
+                <li>Check your email inbox for notification</li>
+                <li>Check Supabase dashboard for new lead</li>
+                <li>Check Vercel Functions logs for any errors</li>
+            </ol>
+            <p class="mt-3 text-xs text-gray-600">
+                Note: SendGrid might take 1-2 minutes on first send
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('test-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const resultDiv = document.getElementById('result');
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            
+            // Generate unique test email
+            const timestamp = Date.now();
+            const email = `test-${timestamp}@example.com`;
+            this.querySelector('input[name="email"]').value = email;
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Sending...';
+            resultDiv.innerHTML = `<p class="text-blue-600">Submitting: ${email}</p>`;
+            
+            try {
+                const response = await fetch('/api/collect-lead', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        email: email,
+                        _gotcha: '' 
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed');
+                }
+                
+                resultDiv.innerHTML = `
+                    <div class="text-green-600">
+                        <p>✓ Success!</p>
+                        <p>Email: ${email}</p>
+                        <p class="mt-2">Check your inbox for the notification email</p>
+                    </div>
+                `;
+                
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="text-red-600">
+                        <p>✗ Error: ${error.message}</p>
+                        <p class="text-xs mt-1">Check Vercel logs for details</p>
+                    </div>
+                `;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -67,7 +67,7 @@
             
             <!-- Email Form -->
             <div class="bg-white rounded-lg p-6 shadow-xl">
-                <form id="email-form" class="space-y-4" action="https://formspree.io/f/xandvorq" method="POST">
+                <form id="email-form" class="space-y-4">
                     <input 
                         type="email" 
                         name="email"
@@ -75,6 +75,8 @@
                         required
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 text-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     >
+                    <!-- Honeypot field - hidden from humans, traps bots -->
+                    <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
                     <button 
                         type="submit"
                         class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-200"
@@ -209,7 +211,7 @@
             <p class="text-xl mb-8">Enter your email to get your FREE MTD Readiness Checklist and secure your early bird spot.</p>
             
             <div class="bg-white rounded-lg p-6 shadow-xl max-w-md mx-auto">
-                <form id="email-form-bottom" class="space-y-4" action="https://formspree.io/f/xandvorq" method="POST">
+                <form id="email-form-bottom" class="space-y-4">
                     <input 
                         type="email" 
                         name="email"
@@ -217,6 +219,8 @@
                         required
                         class="w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-900 text-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
                     >
+                    <!-- Honeypot field - hidden from humans, traps bots -->
+                    <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
                     <button 
                         type="submit"
                         class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-lg transition duration-200"
@@ -244,7 +248,7 @@
         </div>
     </footer>
     
-    <!-- Enhanced form handling with direct database storage -->
+    <!-- Form handling - direct to Supabase only -->
     <script>
         document.querySelectorAll('form').forEach(form => {
             form.addEventListener('submit', async function(e) {
@@ -253,6 +257,7 @@
                 const submitBtn = this.querySelector('button[type="submit"]');
                 const originalText = submitBtn.textContent;
                 const email = this.querySelector('input[name="email"]').value;
+                const gotcha = this.querySelector('input[name="_gotcha"]').value;
                 
                 try {
                     // Update button state
@@ -260,19 +265,20 @@
                     submitBtn.textContent = 'Submitting...';
                     
                     // Send to your API (stores in Supabase)
-                    fetch('/api/collect-lead', {
+                    const response = await fetch('/api/collect-lead', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ email })
-                    }).catch(err => console.log('API error:', err));
-                    
-                    // Also submit to Formspree for email notification
-                    const formData = new FormData(this);
-                    await fetch(this.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: { 'Accept': 'application/json' }
+                        body: JSON.stringify({ 
+                            email: email,
+                            _gotcha: gotcha 
+                        })
                     });
+                    
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Submission failed');
+                    }
                     
                     // Track conversions
                     if (typeof gtag !== 'undefined') {
@@ -283,7 +289,7 @@
                     }
                     
                     // Success state
-                    submitBtn.textContent = '✓ Check your email!';
+                    submitBtn.textContent = '✓ Success! Checklist coming soon';
                     submitBtn.classList.add('bg-green-600');
                     this.reset();
                     
@@ -297,7 +303,14 @@
                 } catch (error) {
                     console.error('Submission error:', error);
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Error - please try again';
+                    
+                    // Handle rate limiting specifically
+                    if (error.message.includes('Too many')) {
+                        submitBtn.textContent = 'Too many attempts - try later';
+                    } else {
+                        submitBtn.textContent = 'Error - please try again';
+                    }
+                    
                     setTimeout(() => {
                         submitBtn.textContent = originalText;
                     }, 3000);
