@@ -41,17 +41,17 @@ export default async function handler(req, res) {
       return res.status(200).json({ success: true, spam: true });
     }
     
-    // Basic spam patterns check
+    // Basic spam patterns check (skip for manual testing)
+    const isTestMode = req.headers['x-test-mode'] === 'true';
     const spamPatterns = [
       /test@test/i,
-      /example\.com$/i,
       /\d{5,}@/,  // 5+ digits before @
       /noreply@/i,
       /no-reply@/i,
       /@(mailinator|guerrillamail|10minutemail|tempmail)/i
     ];
     
-    if (spamPatterns.some(pattern => pattern.test(email))) {
+    if (!isTestMode && spamPatterns.some(pattern => pattern.test(email))) {
       console.log('Spam pattern detected:', email);
       return res.status(200).json({ success: true, spam: true });
     }
